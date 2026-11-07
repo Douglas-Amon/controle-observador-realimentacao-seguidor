@@ -7,9 +7,8 @@ O aplicativo apresenta as resoluções **passo a passo**, incluindo cálculos in
 
 ## 🚀 Acessar o aplicativo
 
-**[Abrir a Bancada de Controle no Streamlit](https://SEU-APP.streamlit.app)**
+**[Abrir a Bancada de Controle no Streamlit]([https://SEU-APP.streamlit.app](https://controle-observador-realimentacao-seguidor-zrjvb3jpcwp8ongeqvo.streamlit.app/))**
 
-> Substitua o endereço acima pelo link público do seu aplicativo.
 
 ## 📚 Módulos disponíveis
 
