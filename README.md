@@ -3,13 +3,13 @@
 
 Aplicativo desenvolvido para a disciplina **Projeto de Sistemas de Controle**, com seis módulos de resolução de exercícios de sistemas de controle.
 
-O aplicativo apresenta as resoluções **passo a passo**, incluindo cálculos intermediários, matrizes, equações matemáticas em LaTeX e verificações dos resultados.
+O aplicativo apresenta as resoluções **passo a passo**, incluindo cálculos intermediários, matrizes, equações matemáticas e verificações dos resultados.
 
 ## 🚀 Acessar o aplicativo
 
 **[Abrir a Bancada de Controle no Streamlit](https://SEU-APP.streamlit.app)**
 
-> Substitua `https://SEU-APP.streamlit.app` pelo endereço público do aplicativo.
+> Substitua o endereço acima pelo link público do seu aplicativo.
 
 ## 📚 Módulos disponíveis
 
@@ -22,6 +22,8 @@ O aplicativo apresenta as resoluções **passo a passo**, incluindo cálculos in
 | 5 | Formas canônicas | Representações canônicas e transformações de similaridade |
 | 6 | Seguidor de referência | Projeto contínuo e discreto pelas convenções UFRN e Ogata/Franklin |
 
+---
+
 ## 🔬 1. Análise de sistemas
 
 O módulo realiza:
@@ -33,37 +35,44 @@ O módulo realiza:
 - Construção da matriz de observabilidade.
 - Cálculo do determinante e do posto das matrizes.
 
-Matriz de controlabilidade:
+### Matriz de controlabilidade
 
-$$
-W_c =
-\begin{bmatrix}
-B & AB & A^2B & \cdots & A^{n-1}B
-\end{bmatrix}
-$$
+```text
+Wc = [B  AB  A²B  ...  A⁽ⁿ⁻¹⁾B]
+```
 
-Matriz de observabilidade:
+### Matriz de observabilidade
 
-$$
-W_o =
-\begin{bmatrix}
-C \\
-CA \\
-CA^2 \\
-\vdots \\
-CA^{n-1}
-\end{bmatrix}
-$$
+```text
+     [ C       ]
+Wo = [ CA      ]
+     [ CA²     ]
+     [ ...     ]
+     [ CA⁽ⁿ⁻¹⁾ ]
+```
 
-Para sistemas SISO, a controlabilidade e a observabilidade completas são verificadas pelas condições:
+### Condições de controlabilidade e observabilidade
 
-$$
-\operatorname{posto}(W_c)=n
-$$
+Um sistema de ordem `n` é completamente controlável quando:
 
-$$
-\operatorname{posto}(W_o)=n
-$$
+```text
+posto(Wc) = n
+```
+
+É completamente observável quando:
+
+```text
+posto(Wo) = n
+```
+
+Para matrizes quadradas, também é possível verificar o determinante:
+
+```text
+det(Wc) != 0
+det(Wo) != 0
+```
+
+---
 
 ## 🎯 2. Realimentação de estados
 
@@ -79,34 +88,38 @@ São apresentados:
 - Cálculo do ganho de realimentação.
 - Verificação dos polos da malha fechada.
 
-Para a convenção:
+### Convenção de controle
 
-$$
-u=Kx
-$$
+```text
+u = Kx
+```
 
-A matriz de malha fechada é:
+### Matriz de malha fechada
 
-$$
-A_{mf}=A+BK
-$$
+```text
+Amf = A + BK
+```
 
-O ganho correspondente é:
+### Fórmula de Ackermann
 
-$$
-K=-e_n^T W_c^{-1}q_c(A)
-$$
+```text
+K = -enᵀ * inv(Wc) * qc(A)
+```
 
-em que:
+Em que:
 
-$$
-e_n^T=
-\begin{bmatrix}
-0 & 0 & \cdots & 1
-\end{bmatrix}
-$$
+```text
+enᵀ = [0  0  ...  1]
+```
 
-e $q_c(A)$ é o polinômio característico desejado avaliado na matriz $A$.
+- `Wc`: matriz de controlabilidade.
+- `inv(Wc)`: inversa da matriz de controlabilidade.
+- `qc(A)`: polinômio característico desejado avaliado na matriz A.
+- `enᵀ`: vetor linha que seleciona a última linha da matriz resultante.
+
+A verificação é realizada comparando os autovalores de `Amf` com os polos desejados.
+
+---
 
 ## 👁️ 3. Observador de estados
 
@@ -120,79 +133,100 @@ São apresentados:
 - Cálculo do ganho do observador.
 - Verificação dos autovalores da dinâmica do erro.
 
-A dinâmica do erro de estimação é:
+### Dinâmica do erro de estimação
 
-$$
-\dot{\tilde{x}}=(A-LC)\tilde{x}
-$$
+```text
+d(x_til)/dt = (A - LC) * x_til
+```
 
-A matriz do observador é:
+Em que `x_til` representa o erro de estimação.
 
-$$
-A_o=A-LC
-$$
+### Matriz do observador
 
-Para um sistema SISO observável, o ganho pode ser calculado por:
+```text
+Ao = A - LC
+```
 
-$$
-L=q_o(A)W_o^{-1}e_n
-$$
+### Ganho do observador
 
-em que:
+Para um sistema SISO observável:
 
-$$
-e_n=
-\begin{bmatrix}
-0\\
-0\\
-\vdots\\
-1
-\end{bmatrix}
-$$
+```text
+L = qo(A) * inv(Wo) * en
+```
+
+Em que:
+
+```text
+     [0]
+en = [0]
+     [.]
+     [1]
+```
+
+- `qo(A)`: polinômio característico desejado do observador avaliado em A.
+- `Wo`: matriz de observabilidade.
+- `en`: último vetor da base canônica.
+
+A verificação é realizada pelos autovalores de:
+
+```text
+A - LC
+```
+
+---
 
 ## ⏱️ 4. Discretização
 
 O módulo converte modelos contínuos para discretos usando a exponencial da matriz aumentada.
 
-Modelo contínuo:
+### Modelo contínuo
 
-$$
-\dot{x}(t)=Ax(t)+Bu(t)
-$$
+```text
+dx(t)/dt = Ax(t) + Bu(t)
+```
 
-Modelo discreto:
+### Modelo discreto
 
-$$
-x[k+1]=Gx[k]+Hu[k]
-$$
+```text
+x[k+1] = Gx[k] + Hu[k]
+```
 
-As matrizes discretas são:
+### Matrizes discretas
 
-$$
-G=e^{AT}
-$$
+```text
+G = exp(A*T)
+```
 
-$$
-H=\int_0^T e^{A\tau}B\,d\tau
-$$
+```text
+H = integral de 0 até T de exp(A*tau)*B dtau
+```
+
+Em que:
+
+- `T`: período de amostragem.
+- `G`: matriz de estados discreta.
+- `H`: matriz de entrada discreta.
+
+### Exponencial da matriz aumentada
 
 O cálculo é realizado por:
 
-$$
-e^{
-\begin{bmatrix}
-A & B\\
-0 & 0
-\end{bmatrix}T
-}
-=
-\begin{bmatrix}
-G & H\\
-0 & I
-\end{bmatrix}
-$$
+```text
+         [ A  B ]
+M = exp( [      ] * T )
+         [ 0  0 ]
 
-em que $T$ é o período de amostragem.
+Resultado:
+
+    [ G  H ]
+M = [      ]
+    [ 0  I ]
+```
+
+Esse procedimento permite calcular simultaneamente as matrizes G e H, inclusive quando A é singular.
+
+---
 
 ## 🔄 5. Formas canônicas
 
@@ -203,27 +237,37 @@ O módulo permite obter representações em espaço de estados a partir de:
 - Transformações de similaridade.
 - Procedimentos de Ogata.
 
-Para a transformação:
+### Transformação de estados
 
-$$
-x=Tz
-$$
+```text
+x = Tz
+```
 
-as matrizes transformadas são:
+### Matrizes transformadas
 
-$$
-\bar{A}=T^{-1}AT
-$$
+```text
+A_barra = inv(T) * A * T
+```
 
-$$
-\bar{B}=T^{-1}B
-$$
+```text
+B_barra = inv(T) * B
+```
 
-$$
-\bar{C}=CT
-$$
+```text
+C_barra = C * T
+```
+
+Em que:
+
+- `T`: matriz de transformação não singular.
+- `inv(T)`: inversa da matriz de transformação.
+- `A_barra`: matriz de estados transformada.
+- `B_barra`: matriz de entrada transformada.
+- `C_barra`: matriz de saída transformada.
 
 O aplicativo apresenta as expressões simbólicas gerais e os valores numéricos calculados.
+
+---
 
 ## 🎛️ 6. Seguidor de referência
 
@@ -235,185 +279,174 @@ São consideradas diferentes convenções de sinal utilizadas na disciplina e em
 
 Define-se o erro:
 
-$$
-e=y-r
-$$
+```text
+e = y - r
+```
 
-A matriz aumentada é:
+### Matriz aumentada
 
-$$
-A_a=
-\begin{bmatrix}
-0 & C\\
-0 & A
-\end{bmatrix}
-$$
+Para a ordem de estados aumentados `(xi, x)`:
 
-Para a ordem de estados aumentados $(\xi,x)$:
+```text
+     [ 0  C ]
+Aa = [      ]
+     [ 0  A ]
+```
 
-$$
-B_a=
-\begin{bmatrix}
-0\\
-B
-\end{bmatrix}
-$$
+### Vetor de entrada aumentado
 
-O ganho é calculado por:
+```text
+     [ 0 ]
+Ba = [   ]
+     [ B ]
+```
 
-$$
-K_a=
-\begin{bmatrix}
-0 & \cdots & 1
-\end{bmatrix}
-W_a^{-1}q_c(A_a)
-$$
+### Ganho aumentado
 
-A lei de controle é:
+```text
+Ka = [0  ...  1] * inv(Wa) * qc(Aa)
+```
 
-$$
-u=-k_1\int e\,dt-K_2x
-$$
+Em que:
 
-A matriz de malha fechada é:
+- `Wa`: matriz de controlabilidade do sistema aumentado.
+- `qc(Aa)`: polinômio desejado avaliado na matriz aumentada.
 
-$$
-A_{mf}=A_a-B_aK_a
-$$
+### Lei de controle
+
+```text
+u = -k1 * integral(e dt) - K2*x
+```
+
+### Matriz de malha fechada
+
+```text
+Amf = Aa - Ba*Ka
+```
+
+---
 
 ### 6.2. Seguidor contínuo — Convenção Ogata
 
-A matriz aumentada é:
+### Matriz aumentada
 
-$$
-A_a=
-\begin{bmatrix}
-0 & C\\
-0 & A
-\end{bmatrix}
-$$
+```text
+     [ 0  C ]
+Aa = [      ]
+     [ 0  A ]
+```
 
-O ganho é:
+### Ganho aumentado
 
-$$
-K_a=-
-\begin{bmatrix}
-0 & \cdots & 1
-\end{bmatrix}
-W_a^{-1}q_c(A_a)
-$$
+```text
+Ka = -[0  ...  1] * inv(Wa) * qc(Aa)
+```
 
-A lei de controle é:
+### Lei de controle
 
-$$
-u=k_1\int e\,dt+K_2x
-$$
+```text
+u = k1 * integral(e dt) + K2*x
+```
 
-A matriz de malha fechada é:
+### Matriz de malha fechada
 
-$$
-A_{mf}=A_a+B_aK_a
-$$
+```text
+Amf = Aa + Ba*Ka
+```
+
+A principal diferença em relação à convenção UFRN está no sinal adotado para o ganho e na lei de controle.
+
+---
 
 ### 6.3. Seguidor discreto — Convenção UFRN
 
-A matriz aumentada é:
+### Matriz aumentada
 
-$$
-\hat{G}=
-\begin{bmatrix}
-G & H\\
-0 & 0
-\end{bmatrix}
-$$
+```text
+       [ G  H ]
+G_hat = [      ]
+       [ 0  0 ]
+```
 
-O vetor de entrada aumentado é:
+### Vetor de entrada aumentado
 
-$$
-\hat{H}=
-\begin{bmatrix}
-0\\
-\vdots\\
-0\\
-1
-\end{bmatrix}
-$$
+```text
+        [ 0 ]
+        [ . ]
+H_hat = [ . ]
+        [ 0 ]
+        [ 1 ]
+```
 
-O ganho auxiliar é:
+### Ganho auxiliar
 
-$$
-\hat{K}=
-\begin{bmatrix}
-0 & \cdots & 1
-\end{bmatrix}
-W_c^{-1}q_c(\hat{G})
-$$
+```text
+K_hat = [0  ...  1] * inv(Wc) * qc(G_hat)
+```
 
-A transformação dos ganhos é:
+### Transformação dos ganhos
 
-$$
-\begin{bmatrix}
-K & -k_I
-\end{bmatrix}
-=
-(\hat{K}+e_n^T)M^{-1}
-$$
+```text
+[K  -kI] = (K_hat + enᵀ) * inv(M)
+```
 
-A lei de controle é:
+Em que:
 
-$$
-u=k_1x+k_2\xi
-$$
+- `M`: matriz de transformação utilizada no procedimento.
+- `K_hat`: ganho auxiliar.
+- `kI`: ganho integral.
+- `enᵀ`: vetor linha da base canônica.
 
-com:
+### Lei de controle
 
-$$
-k_1=-K
-$$
+```text
+u = k1*x + k2*xi
+```
 
-$$
-k_2=k_I
-$$
+Com:
 
-A verificação dos polos é realizada utilizando a matriz real da malha fechada nas variáveis $(x,\xi)$.
+```text
+k1 = -K
+k2 = kI
+```
+
+A verificação dos polos é realizada utilizando a matriz real da malha fechada nas variáveis `(x, xi)`.
+
+---
 
 ### 6.4. Seguidor discreto — Convenção clássica
 
-A matriz aumentada é:
+### Matriz aumentada
 
-$$
-A_a=
-\begin{bmatrix}
-1 & C\\
-0 & G
-\end{bmatrix}
-$$
+```text
+     [ 1  C ]
+Aa = [      ]
+     [ 0  G ]
+```
 
-O ganho é:
+### Ganho aumentado
 
-$$
-K_a=-
-\begin{bmatrix}
-0 & \cdots & 1
-\end{bmatrix}
-W_a^{-1}q_c(A_a)
-$$
+```text
+Ka = -[0  ...  1] * inv(Wa) * qc(Aa)
+```
 
-A lei de controle é:
+### Lei de controle
 
-$$
-u=k_1\xi+K_2x
-$$
+```text
+u = k1*xi + K2*x
+```
 
-A matriz de malha fechada é:
+### Matriz de malha fechada
 
-$$
-A_{mf}=A_a+B_aK_a
-$$
+```text
+Amf = Aa + Ba*Ka
+```
 
 ### Verificação dos resultados
 
 Em todos os casos, o aplicativo reconstrói a matriz real de malha fechada e verifica se os polos obtidos coincidem com os polos desejados.
+
+---
 
 ## 📝 Entrada de dados
 
@@ -451,11 +484,15 @@ O aplicativo interpreta automaticamente o par conjugado.
 
 Os polos complexos devem aparecer em pares conjugados para projetos com matrizes e ganhos reais.
 
+---
+
 ## 📂 Exemplos resolvidos
 
 A aba **Exemplos** disponibiliza questões das Listas 1, 2 e 3 da disciplina.
 
 Os dados podem ser carregados diretamente nos módulos para acompanhar o desenvolvimento dos cálculos.
+
+---
 
 ## 📄 Exportação dos resultados
 
@@ -469,6 +506,8 @@ Os arquivos LaTeX podem ser compilados utilizando:
 ```bash
 pdflatex arquivo.tex
 ```
+
+---
 
 ## 💻 Como executar localmente
 
@@ -492,6 +531,8 @@ Normalmente, o Streamlit disponibiliza o aplicativo em:
 http://localhost:8501
 ```
 
+---
+
 ## ☁️ Publicação no Streamlit Community Cloud
 
 1. Envie os arquivos do projeto para um repositório no GitHub.
@@ -502,6 +543,8 @@ http://localhost:8501
 6. Realize a publicação.
 
 Os arquivos Python devem permanecer na mesma pasta para que as importações funcionem corretamente.
+
+---
 
 ## 🗂️ Estrutura do projeto
 
@@ -530,6 +573,8 @@ controle_app/
 | `requirements.txt` | Dependências Python |
 | `tests/test_nucleo.py` | Testes automatizados |
 
+---
+
 ## 🧪 Testes
 
 Para executar os testes do núcleo:
@@ -537,6 +582,8 @@ Para executar os testes do núcleo:
 ```bash
 python -m pytest -q
 ```
+
+---
 
 ## 🎓 Finalidade acadêmica
 
