@@ -406,8 +406,8 @@ for _k in (["an_dom", "dz_T", "cn_mode", "cn_den", "cn_num", "sv_dom", "sv_conv"
            + [f"{p}_dom" for p in ("fb", "ob")]):
     if _k in ss:
         ss[_k] = ss[_k]
-st.sidebar.title("🎛️ Bancada de Controle")
-st.sidebar.caption("Projeto de Sistemas de Controle")
+st.sidebar.title("🎛️ Calculadora de Projeto de Sistemas de Controle no Espaço de Estados")
+st.sidebar.caption("Projeto de Sistemas de Controle - App para Unidade 3")
 page = st.sidebar.radio("Módulo", list(PAGES.values()), key="pagina")
 sidebar_help()
 
