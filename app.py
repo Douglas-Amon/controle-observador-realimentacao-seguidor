@@ -19,7 +19,7 @@ from nucleo import (
 )
 from latex import cnum
 
-st.set_page_config(page_title="Bancada de Controle", page_icon="🎛️", layout="wide")
+st.set_page_config(page_title="Projeto de Sistemas de Controle no Espaço de Estados", page_icon="🎛️", layout="wide")
 
 PAGES = {
     "analise": "1 · Análise (polos, controlabilidade, observabilidade)",
